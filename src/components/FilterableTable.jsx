@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
 import produce from '../utilities/data.mjs';
-// import axios from 'axios'
+import axios from 'axios'
 
 function FilterableTable() {
   const [inventory, setInventory] = useState(null);
@@ -15,6 +15,7 @@ function FilterableTable() {
     try {
       let url = 'http://localhost:3000/api/produce'
       let res = await axios.get(url)
+      console.log(res.data)
       setInventory(res.data)
     } catch (err) {
       console.error(err)

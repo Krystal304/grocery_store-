@@ -17,10 +17,10 @@ function ProductTable({ produce, searchParams, inStock }) {
     //Finds new category and makes header rows
     if (cat !== el.category) {
       cat = el.category;
-      rows.push(<ProductCategoryRow category={el.category} />);
+      rows.push(<ProductCategoryRow category={el.category} key ={(el.category)}/>);
     }
 
-    rows.push(<ProductRow product={el} />);
+    rows.push(<ProductRow product={el} key ={(el._id)}/>);
   });
 
   return (
