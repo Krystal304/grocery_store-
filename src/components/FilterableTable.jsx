@@ -1,28 +1,28 @@
 import { useState } from 'react';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
+import createForm from './CreateForm'
 import produce from '../utilities/data.mjs';
-import axios from 'axios'
+import {getInventory} from '../utilities/controller.mjs'
+
 
 function FilterableTable() {
   const [inventory, setInventory] = useState(null);
+  const [toggle, setToggle] = useState(false);
   const [formData, setFormData] = useState({
     searchParams: '',
     inStock: false,
   });
 
   async function handleClick(e) {
-    try {
-      let url = 'http://localhost:3000/api/produce'
-      let res = await axios.get(url)
-      console.log(res.data)
-      setInventory(res.data)
-    } catch (err) {
-      console.error(err)
-    }
+  
+    let res = await getInventory()
+    res.sort((a, b) => a.name.localeCompare(b.name))
+    setInventory(res)
   }
   return (
     <>
+    {toggle && <createForm setToggle={setToggle} />}: <button onClick={() => setToggle(t => !t)}>Add New Produce</button>
       <button onClick={handleClick}>Get Inventory</button> 
       <SearchBar formData={formData} setFormData={setFormData} />
       {inventory ? (
