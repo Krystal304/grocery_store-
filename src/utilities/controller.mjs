@@ -1,12 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
 async function getInventory() {
   try {
-    let url = "http://localhost:3000/api/produce";
+    let url = 'http://localhost:3000/api/produce';
 
     let res = await axios.get(url);
-
-    // console.log(res.data)
 
     return res.data;
   } catch (err) {
@@ -16,21 +14,22 @@ async function getInventory() {
 
 async function createProduce(formData) {
   try {
-    let url = "http://localhost:3000/api/produce";
+    let url = 'http://localhost:3000/api/produce';
 
-    formData.price = "$" + formData.price;
+    formData.price = '$' + formData.price;
 
     let res = await axios.post(url, formData);
 
     return res.data;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
   }
 }
 
 async function deleteProduce(id) {
   try {
     let url = `http://localhost:3000/api/produce/${id}`;
+
     let res = await axios.delete(url);
 
     return true;
@@ -39,4 +38,17 @@ async function deleteProduce(id) {
   }
 }
 
-export { getInventory, createProduce, deleteProduce };
+async function updateProduce(id, formData) {
+  try {
+    let url = `http://localhost:3000/api/produce/${id}`;
+
+    let res = await axios.put(url, formData);
+
+    return res.data;
+    
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export { getInventory, createProduce, deleteProduce, updateProduce };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createProduce } from '../utilities/controller.mjs';
 import axios from 'axios';
 
-function CreateForm({ setToggle }) {
+function CreateForm({ setToggle, setInventory, inventory }) {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
