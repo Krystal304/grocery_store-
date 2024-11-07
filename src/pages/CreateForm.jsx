@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { createProduce } from '../utilities/controller.mjs';
+
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function CreateForm({ setToggle, setInventory, inventory }) {
+function CreateForm({}) {
+
+  const nav = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -10,6 +14,11 @@ function CreateForm({ setToggle, setInventory, inventory }) {
     category: 'Vegetables',
   });
 
+
+  function handleClick() { 
+    nav('/');
+    
+  }
   function handleChange(e) {
     if (e.target.name == 'stocked') {
       setFormData({
@@ -25,17 +34,24 @@ function CreateForm({ setToggle, setInventory, inventory }) {
   }
 
   async function handleSubmit(e) {
-   
-    e.preventDefault();
+
+    try {
+      e.preventDefault();
 
     let res = await createProduce(formData);
     setInventory([...inventory, res]);
-    setToggle((t) => !t);
+    nav('/');
+    } catch (err) {
+      console.error(err);
+      
+    }
+   
 
   }
 
   return (
     <>
+    <h2>Create New Produce</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Name: <input onChange={handleChange} type='text' name='name' />
@@ -60,7 +76,7 @@ function CreateForm({ setToggle, setInventory, inventory }) {
         <br />
         <input type='submit' />
       </form>
-      <button onClick={() => setToggle((t) => !t)}>Close Form</button>
+      <button onClick={handleClick}>Close Form</button>
     </>
   );
 }
