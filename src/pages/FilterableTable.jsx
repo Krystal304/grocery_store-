@@ -1,7 +1,6 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import SearchBar from '../components/SearchBar';
 import ProductTable from '../components/ProductTable';
-
 import { getInventory } from '../utilities/controller.mjs';
 
 function FilterableTable() {
@@ -17,13 +16,12 @@ function FilterableTable() {
     setInventory(newArr);
   }
 
-
-  useEffect(() => {
-    getData();
+  useEffect(()=>{
+    getData()
   }, [])
+
   return (
     <>
-
       <SearchBar formData={formData} setFormData={setFormData} />
       {inventory ? (
         <ProductTable

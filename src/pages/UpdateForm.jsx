@@ -1,24 +1,28 @@
-import { useState } from 'react';
-import { createProduce } from '../utilities/controller.mjs';
+import { useState, useEffect } from 'react';
+import { updateProduce, findOneProduce } from '../utilities/controller.mjs';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-function CreateForm({}) {
-
+function UpdateForm() {
   const nav = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    stocked: false,
-    category: 'Vegetables',
-  });
+  const { id } = useParams();
+  const [formData, setFormData] = useState(null);
 
+  useEffect(() => {
+    async function getData() {
+      let data = await findOneProduce(id);
+      let num = data.price.split('');
+      num.shift();
+      data.price = Number(num);
+      setFormData(data);
+    }
 
-  function handleClick() { 
+    getData();
+  }, []);
+
+  function handleClick(e) {
     nav('/');
-    
   }
+
   function handleChange(e) {
     if (e.target.name == 'stocked') {
       setFormData({
@@ -34,51 +38,71 @@ function CreateForm({}) {
   }
 
   async function handleSubmit(e) {
-
     try {
       e.preventDefault();
-
-    let res = await createProduce(formData);
-    setInventory([...inventory, res]);
-    nav('/');
+      let res = await updateProduce(id, formData);
+      nav('/');
     } catch (err) {
       console.error(err);
-      
     }
-   
-
   }
 
   return (
     <>
-    <h2>Update Produce</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name: <input onChange={handleChange} type='text' name='name' />
-        </label>
-        <br />
-        <label>
-          Price: <input onChange={handleChange} type='number' name='price' />
-        </label>
-        <br />
-        <label>
-          In Stock:{' '}
-          <input onChange={handleChange} type='checkbox' name='stocked' />
-        </label>
-        <br />
-        <label>
-          Category:{' '}
-          <select onChange={handleChange} type='text' name='category'>
-            <option value='Vegetables'>Vegetables</option>
-            <option value='Fruits'>Fruits</option>
-          </select>
-        </label>
-        <br />
-        <input type='submit' />
-      </form>
+      <h2>Update Produce</h2>
+      {formData ? (
+        <form onSubmit={handleSubmit}>
+          <label>
+            Name:{' '}
+            <input
+              onChange={handleChange}
+              value={formData.name}
+              type='text'
+              name='name'
+            />
+          </label>
+          <br />
+          <label>
+            Price:{' '}
+            <input
+              onChange={handleChange}
+              value={formData.price}
+              type='number'
+              name='price'
+            />
+          </label>
+          <br />
+          <label>
+            In Stock:{' '}
+            <input
+              onChange={handleChange}
+              checked={formData.stocked}
+              type='checkbox'
+              name='stocked'
+            />
+          </label>
+          <br />
+          <label>
+            Category:{' '}
+            <select
+              onChange={handleChange}
+              value={formData.category}
+              type='text'
+              name='category'
+            >
+              <option value='Vegetables'>Vegetables</option>
+              <option value='Fruits'>Fruits</option>
+            </select>
+          </label>
+          <br />
+          <input type='submit' />
+        </form>
+      ) : (
+        <h2>Loading...</h2>
+      )}
       <button onClick={handleClick}>Close Form</button>
     </>
   );
 }
 
-export default CreateForm;
+export default UpdateForm;
